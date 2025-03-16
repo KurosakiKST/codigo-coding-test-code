@@ -22,34 +22,24 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.ryan.codigo2.presentation.common.component.ErrorMessage
 import com.ryan.codigo2.presentation.common.component.LoadingIndicator
 import com.ryan.codigo2.presentation.detail.state.DetailEvent
+import com.ryan.codigo2.presentation.detail.state.DetailState
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DetailScreen(
-    movieId: Int,
-    onNavigateBack: () -> Unit,
-    viewModel: DetailViewModel = hiltViewModel()
+    state: DetailState,
+    onEvent: (DetailEvent) -> Unit,
+    onNavigateBack: () -> Unit
 ) {
-    val state by viewModel.state.collectAsState()
-
-    LaunchedEffect(movieId) {
-        viewModel.onEvent(DetailEvent.LoadMovieDetails(movieId))
-    }
-
     Scaffold(
         topBar = {
             TopAppBar(
@@ -66,7 +56,7 @@ fun DetailScreen(
                     state.movie?.let { movie ->
                         IconButton(
                             onClick = {
-                                viewModel.onEvent(DetailEvent.ToggleFavorite(!movie.isFavorite))
+                                onEvent(DetailEvent.ToggleFavorite(!movie.isFavorite))
                             }
                         ) {
                             Icon(
@@ -94,7 +84,7 @@ fun DetailScreen(
                     ErrorMessage(
                         message = state.error ?: "An error occurred",
                         onRetry = {
-                            viewModel.onEvent(DetailEvent.LoadMovieDetails(movieId))
+                            onEvent(DetailEvent.LoadMovieDetails(state.movieId ?: -1))
                         }
                     )
                 }
