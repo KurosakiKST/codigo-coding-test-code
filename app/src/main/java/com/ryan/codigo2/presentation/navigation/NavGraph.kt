@@ -7,8 +7,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.ryan.codigo2.presentation.detail.DetailScreen
-import com.ryan.codigo2.presentation.home.HomeScreen
+import com.ryan.codigo2.presentation.detail.DetailRoute
+import com.ryan.codigo2.presentation.home.HomeRoute
 
 @Composable
 fun NavGraph(
@@ -19,7 +19,8 @@ fun NavGraph(
         startDestination = Screen.Home.route
     ) {
         composable(route = Screen.Home.route) {
-            HomeScreen(
+            // Use HomeRoute as the connection point
+            HomeRoute(
                 onNavigateToDetail = { movieId ->
                     navController.navigate(Screen.Detail.createRoute(movieId))
                 }
@@ -35,7 +36,7 @@ fun NavGraph(
             )
         ) { entry ->
             val movieId = entry.arguments?.getInt("movieId") ?: -1
-            DetailScreen(
+            DetailRoute(
                 movieId = movieId,
                 onNavigateBack = {
                     navController.popBackStack()

@@ -5,5 +5,6 @@ import com.ryan.codigo2.domain.model.Movie
 data class DetailState(
     val movie: Movie? = null,
     val isLoading: Boolean = true,
-    val error: String? = null
+    val error: String? = null,
+    val movieId: Int? = null
 )
